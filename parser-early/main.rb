@@ -1,6 +1,7 @@
 require_relative 'early'
 require_relative 'gramatica'
 require_relative 'lexer'
+require_relative 'saida_operacoes'
 
 regras = [
   Regra.new('E', %w[E + T]),
@@ -25,6 +26,7 @@ gramatica = Gramatica.new(regras, 'E')
 parser = EarleyParser.new(gramatica)
 
 expressoes = [
+  '4+5*2',
   '(1 + 4) * 2^4',
   '7 / ( 1 - 3 )',
   '9^(1 * 6 / 2 + 4)',
@@ -40,4 +42,5 @@ expressoes.each do |expressao|
   tokens = Lexer.new(expressao).tokens
   aceito = parser.parse(tokens)
   puts "#{expressao} => #{aceito ? 'Aceito' : 'Rejeitado'}"
+  p SaidaOperacoes.new(expressao).montar if aceito
 end
