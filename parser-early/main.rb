@@ -1,16 +1,43 @@
-require_relative "early"
-require_relative "gramatica"
+require_relative 'early'
+require_relative 'gramatica'
+require_relative 'lexer'
 
 regras = [
-  Regra.new('S', %w[N + S]),
-  Regra.new('S', %w[N]),
-  Regra.new('N', %w[1]),
-  Regra.new('N', %w[2]),
-  Regra.new('N', %w[3])
+  Regra.new('E', %w[E + T]),
+  Regra.new('E', %w[E - T]),
+  Regra.new('E', %w[T]),
+
+  Regra.new('T', %w[T * P]),
+  Regra.new('T', %w[T / P]),
+  Regra.new('T', %w[P]),
+
+  Regra.new('P', %w[F ^ P]),
+  Regra.new('P', %w[F]),
+
+  Regra.new('F', %w[- F]),
+  Regra.new('F', %w[A]),
+
+  Regra.new('A', %w[num]),
+  Regra.new('A', %w[( E )])
 ]
 
-gramatica = Gramatica.new(regras, "S")
-
+gramatica = Gramatica.new(regras, 'E')
 parser = EarleyParser.new(gramatica)
-input = "1+2"
-puts parser.parse(input) ? 'Aceito' : 'Rejeitado'
+
+expressoes = [
+  '(1 + 4) * 2^4',
+  '7 / ( 1 - 3 )',
+  '9^(1 * 6 / 2 + 4)',
+  '2 + 4 ^ -4 / 4',
+  '^ 2 + 4',
+  '9 * 2 +',
+  '9 + + 3',
+  '( ) * 3',
+  '( 3 + 3'
+]
+
+expressoes.each do |expressao|
+  tokens = Lexer.new(expressao).tokens
+  aceito = parser.parse(tokens)
+  puts "#{expressao} => #{aceito ? 'Aceito' : 'Rejeitado'}"
+end

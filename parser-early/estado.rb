@@ -1,4 +1,4 @@
-require 'tty-table'
+require 'set'
 
 class Estado
   attr_accessor :regra, :ponto, :inicio, :comentario
@@ -6,7 +6,7 @@ class Estado
   def initialize(regra, ponto, inicio, comentario = '')
     @regra = regra
     @ponto = ponto
-    @inicio = inicio # estado de Origem
+    @inicio = inicio
     @comentario = comentario
   end
 
@@ -31,7 +31,7 @@ class Estado
   end
 
   def eql?(other)
-    regra.to_s == other.regra.to_s && ponto == other.ponto && inicio == other.inicio
+    self == other
   end
 
   def hash
@@ -39,8 +39,9 @@ class Estado
   end
 
   def to_s
-    direita = @regra.direita.join.insert(ponto, '.')
-    "#{@regra.esquerda} -> #{direita}"
+    direita = regra.direita.dup
+    direita.insert(ponto, '.')
+    "#{regra.esquerda} -> #{direita.join(' ')}"
   end
 end
 
@@ -49,9 +50,9 @@ class S
 
   def initialize(index, entrada)
     @index = index
+    @entrada = entrada
     @estados = Set.new
     @estados_visitados = Set.new
-    @entrada = entrada
   end
 
   def <<(element)
@@ -59,9 +60,9 @@ class S
   end
 
   def take!
-    taken = (estados - estados_visitados).take(1)
-    estados_visitados << taken[0]
-    taken[0]
+    estado = (estados - estados_visitados).first
+    estados_visitados << estado
+    estado
   end
 
   def empty?
@@ -69,13 +70,14 @@ class S
   end
 
   def to_s
-    table = TTY::Table.new(header: %w[Estado Origem Comentário])
-    expressao = @entrada.split('').join.insert(@index, '.')
+    expressao = @entrada.dup
+    expressao.insert(@index, '.')
+    linhas = ["==== S(#{@index}): #{expressao.join(' ')} ===="]
 
     estados.each do |estado|
-      table << [estado, estado.inicio, estado.comentario]
+      linhas << "#{estado} | origem: #{estado.inicio} | #{estado.comentario}"
     end
 
-    "==== S(#{@index}): #{expressao} ====\n#{table.render(:ascii, alignments: [:left, :center, :left])}\n"
+    "#{linhas.join("\n")}\n"
   end
 end
