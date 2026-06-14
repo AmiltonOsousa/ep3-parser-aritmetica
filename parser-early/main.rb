@@ -25,7 +25,7 @@ regras = [
 gramatica = Gramatica.new(regras, 'E')
 parser = EarleyParser.new(gramatica)
 
-expressoes = [
+expressoes_padrao = [
   '4+5*2',
   '(1 + 4) * 2^4',
   '7 / ( 1 - 3 )',
@@ -37,6 +37,8 @@ expressoes = [
   '( ) * 3',
   '( 3 + 3'
 ]
+
+expressoes = ARGV.empty? ? expressoes_padrao : ARGV
 
 expressoes.each do |expressao|
   tokens = Lexer.new(expressao).tokens

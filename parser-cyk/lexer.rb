@@ -1,56 +1,41 @@
-class Token
-  attr_reader :type, :value
-
-  def initialize(type, value)
-    @type = type
-    @value = value
-  end
-
-  def to_s
-    "#{type}(#{value})"
-  end
-end
-
 class Lexer
-  def initialize(input)
-    @input = input
-    @position = 0
+  def initialize(entrada)
+    @entrada = entrada
+    @posicao = 0
   end
 
-  def tokenize
-    tokens = []
-    while current_char
-      case current_char
+  def tokens
+    resultado = []
+
+    while atual
+      case atual
       when /\s/
-        advance
+        avancar
       when /\d/
-        tokens << number
-      when '+'
-        tokens << Token.new(:PLUS, '+')
-        advance
-      when '*'
-        tokens << Token.new(:MUL, '*')
-        advance
+        resultado << 'num'
+        ler_numero
+      when '+', '-', '*', '/', '^', '(', ')'
+        resultado << atual
+        avancar
       else
-        raise "Unexpected character: #{current_char}"
+        raise "Caractere invalido: #{atual}"
       end
     end
-    tokens
+
+    resultado
   end
 
   private
 
-  def current_char
-    @input[@position]
+  def atual
+    @entrada[@posicao]
   end
 
-  def advance
-    @position += 1
+  def avancar
+    @posicao += 1
   end
 
-  def number
-    start = @position
-    advance while current_char =~ /\d/
-    Token.new(:NUMBER, @input[start...@position].to_i)
+  def ler_numero
+    avancar while atual =~ /\d/
   end
 end
