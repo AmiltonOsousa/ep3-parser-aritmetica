@@ -3,36 +3,42 @@ class GramaticaAritmetica
     [
       Regra.new('S', ['E']),
 
-      Regra.new('E', ['E_ADD_T']),
-      Regra.new('E', ['E_SUB_T']),
+      Regra.new('E', ['E_ADD']),
+      Regra.new('E', ['E_SUB']),
       Regra.new('E', ['T']),
-      Regra.new('E_ADD_T', ['E', 'PLUS_T']),
-      Regra.new('E_SUB_T', ['E', 'MINUS_T']),
-      Regra.new('PLUS_T', ['+']),
-      Regra.new('MINUS_T', ['-']),
+      Regra.new('E_ADD', ['E', 'PLUS_T']),
+      Regra.new('E_SUB', ['E', 'MINUS_T']),
+      Regra.new('PLUS_T', ['PLUS', 'T']),
+      Regra.new('MINUS_T', ['MINUS', 'T']),
+      Regra.new('PLUS', ['+']),
+      Regra.new('MINUS', ['-']),
 
-      Regra.new('T', ['T_MUL_P']),
-      Regra.new('T', ['T_DIV_P']),
+      Regra.new('T', ['T_MUL']),
+      Regra.new('T', ['T_DIV']),
       Regra.new('T', ['P']),
-      Regra.new('T_MUL_P', ['T', 'MUL_P']),
-      Regra.new('T_DIV_P', ['T', 'DIV_P']),
-      Regra.new('MUL_P', ['*']),
-      Regra.new('DIV_P', ['/']),
+      Regra.new('T_MUL', ['T', 'MUL_P']),
+      Regra.new('T_DIV', ['T', 'DIV_P']),
+      Regra.new('MUL_P', ['MUL', 'P']),
+      Regra.new('DIV_P', ['DIV', 'P']),
+      Regra.new('MUL', ['*']),
+      Regra.new('DIV', ['/']),
 
       Regra.new('P', ['F_POW']),
       Regra.new('P', ['F']),
-      Regra.new('F_POW', ['F', 'POW_P']),
-      Regra.new('POW_P', ['^', 'P']),
+      Regra.new('F_POW', ['F', 'POW_T']),
+      Regra.new('POW_T', ['POW', 'P']),
+      Regra.new('POW', ['^']),
 
-      Regra.new('F', ['NEG_F']),
+      Regra.new('F', ['NEG']),
       Regra.new('F', ['A']),
-      Regra.new('NEG_F', ['-', 'F']),
+      Regra.new('NEG', ['MINUS', 'F']),
 
-      Regra.new('A', ['num']),
+      Regra.new('A', ['NUM']),
       Regra.new('A', ['LP', 'E_RP']),
+      Regra.new('NUM', ['num']),
       Regra.new('LP', ['(']),
-      Regra.new('E_RP', ['E', 'RP']),
-      Regra.new('RP', [')'])
+      Regra.new('RP', [')']),
+      Regra.new('E_RP', ['E', 'RP'])
     ]
   end
 end

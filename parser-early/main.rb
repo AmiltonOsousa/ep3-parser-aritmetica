@@ -25,20 +25,18 @@ regras = [
 gramatica = Gramatica.new(regras, 'E')
 parser = EarleyParser.new(gramatica)
 
-expressoes_padrao = [
-  '4+5*2',
-  '(1 + 4) * 2^4',
-  '7 / ( 1 - 3 )',
-  '9^(1 * 6 / 2 + 4)',
-  '2 + 4 ^ -4 / 4',
-  '^ 2 + 4',
-  '9 * 2 +',
-  '9 + + 3',
-  '( ) * 3',
-  '( 3 + 3'
-]
+expressoes = if ARGV.empty?
+  print "Expressao: "
+  entrada = gets&.chomp
+  entrada.nil? || entrada.strip.empty? ? [] : [entrada]
+else
+  ARGV
+end
 
-expressoes = ARGV.empty? ? expressoes_padrao : ARGV
+if expressoes.empty?
+  puts 'Expressao invalida'
+  exit 1
+end
 
 expressoes.each do |expressao|
   tokens = Lexer.new(expressao).tokens
